@@ -3,7 +3,6 @@ package com.coolguy1353.cglogin;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,11 +33,14 @@ final class AuthListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        if (plugin.restoreRememberedSession(player)) {
+            return;
+        }
         plugin.requireAuthentication(player);
-        if (plugin.hasAccountFor(player.getUniqueId())) {
-            player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password>.");
+        if (plugin.hasAccountFor(player.getName())) {
+            plugin.sendMessage(player, "prompt-login");
         } else {
-            player.sendMessage(ChatColor.YELLOW + "Please register with /register <password>.");
+            plugin.sendMessage(player, "prompt-register");
         }
     }
 
@@ -68,7 +70,7 @@ final class AuthListener implements Listener {
         }
         if (!ALLOWED_COMMANDS.contains(command)) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "Log in before using commands.");
+            plugin.sendMessage(event.getPlayer(), "login-required-command");
         }
     }
 

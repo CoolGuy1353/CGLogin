@@ -1,1 +1,27 @@
 authentication-timeout-seconds: 60
+remember-session-hours: 168
+minimum-password-length: 8
+messages:
+  prompt-login: '&ePlease log in with /login <password>.'
+  prompt-register: '&ePlease register with /register <password>.'
+  session-restored: '&aWelcome back! Your remembered session was restored.'
+  usage-register: '&eUsage: /register <password>'
+  usage-login: '&eUsage: /login <password>'
+  usage-logout: '&eUsage: /logout'
+  usage-resetpw: '&eUsage: /resetpw <player> <new-password>'
+  account-exists: '&cYou already have an account. Use /login <password>.'
+  account-missing: '&cNo account found. Use /register <password>.'
+  account-created: '&aAccount registered and logged in.'
+  account-save-failed: '&cCould not save your account. Please contact an administrator.'
+  logged-in: '&aYou are now logged in.'
+  logged-out: '&aYou are now logged out.'
+  not-logged-in: '&cYou are not logged in.'
+  wrong-password: '&cIncorrect password. Attempts remaining: %attempts%'
+  too-many-attempts: '&cToo many failed login attempts.'
+  password-too-short: '&cPasswords must be at least %minimum% characters long.'
+  no-permission: '&cYou do not have permission to do that.'
+  password-reset-save-failed: '&cCould not save the password reset.'
+  password-reset-notice: '&cYour password was reset. Please log in again.'
+  password-reset: '&aPassword reset for %player%.'
+  authentication-timeout: '&cYou did not authenticate in time.'
+  login-required-command: '&cLog in before using commands.'

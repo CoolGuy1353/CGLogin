@@ -24,5 +24,7 @@ default; returning within that window restores the session automatically and
 extends the window. Players can use `/logout` to clear the remembered session.
 
 The session duration, authentication timeout, minimum password length, and
-messages can be customized in `plugins/CGLogin/config.yml`. Set
+messages can be customized in `plugins/CGLogin/config.yml`. The login and
+registration titles and their fade timings are configurable there as well.
+Unauthenticated players receive blindness until they log in or register. Set
 `remember-session-hours` to `0` to disable remembered sessions.

@@ -37,7 +37,9 @@ final class AuthListener implements Listener {
             return;
         }
         plugin.requireAuthentication(player);
-        if (plugin.hasAccountFor(player.getName())) {
+        boolean hasAccount = plugin.hasAccountFor(player.getName());
+        plugin.showAuthenticationTitle(player, !hasAccount);
+        if (hasAccount) {
             plugin.sendMessage(player, "prompt-login");
         } else {
             plugin.sendMessage(player, "prompt-register");

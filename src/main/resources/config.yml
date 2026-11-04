@@ -1,6 +1,16 @@
 authentication-timeout-seconds: 60
 remember-session-hours: 168
 minimum-password-length: 8
+title-fade-in-ticks: 10
+title-stay-ticks: 60
+title-fade-out-ticks: 10
+titles:
+  login:
+    title: '&eLOGIN'
+    subtitle: '&7Use /login <password>'
+  register:
+    title: '&aREGISTER'
+    subtitle: '&7Use /register <password>'
 messages:
   prompt-login: '&ePlease log in with /login <password>.'
   prompt-register: '&ePlease register with /register <password>.'

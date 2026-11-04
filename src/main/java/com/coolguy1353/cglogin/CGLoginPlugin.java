@@ -14,6 +14,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CGLoginPlugin extends JavaPlugin {
@@ -112,6 +114,8 @@ public final class CGLoginPlugin extends JavaPlugin {
             sendMessage(player, "usage-logout");
         } else if (authenticated.remove(player.getUniqueId())) {
             clearRememberedSession(player.getName());
+            requireAuthentication(player);
+            showAuthenticationTitle(player, false);
             sendMessage(player, "logged-out");
         } else {
             sendMessage(player, "not-logged-in");
@@ -145,6 +149,7 @@ public final class CGLoginPlugin extends JavaPlugin {
                 .findFirst().orElse(null);
         if (onlineTarget != null) {
             requireAuthentication(onlineTarget);
+            showAuthenticationTitle(onlineTarget, false);
             sendMessage(onlineTarget, "password-reset-notice");
         }
         sendMessage(sender, "password-reset", "%player%", username);
@@ -185,6 +190,7 @@ public final class CGLoginPlugin extends JavaPlugin {
 
     private void startSession(Player player, String username) {
         authenticated.add(player.getUniqueId());
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
         long sessionHours = Math.max(0, Math.min(87_600, getConfig().getLong("remember-session-hours", 168)));
         long expiresAt = sessionHours == 0 ? 0 : System.currentTimeMillis() + sessionHours * 3_600_000L;
         accounts.set(accountPath(username) + ".session-expires-at", expiresAt);
@@ -248,11 +254,25 @@ public final class CGLoginPlugin extends JavaPlugin {
         authenticated.remove(player.getUniqueId());
         failedAttempts.remove(player.getUniqueId());
         int timeout = Math.max(1, getConfig().getInt("authentication-timeout-seconds", 60));
+        int blindnessDuration = (int) Math.min(Integer.MAX_VALUE, timeout * 20L);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, blindnessDuration, 0, false, false, false));
         Bukkit.getScheduler().runTaskLater(this, () -> {
             if (player.isOnline() && !isAuthenticated(player.getUniqueId())) {
                 player.kickPlayer(message("authentication-timeout"));
             }
         }, timeout * 20L);
+    }
+
+    void showAuthenticationTitle(Player player, boolean needsRegistration) {
+        String path = needsRegistration ? "titles.register" : "titles.login";
+        String title = getConfig().getString(path + ".title", needsRegistration ? "&aREGISTER" : "&eLOGIN");
+        String subtitle = getConfig().getString(path + ".subtitle",
+                needsRegistration ? "&7Use /register <password>" : "&7Use /login <password>");
+        int fadeIn = Math.max(0, getConfig().getInt("title-fade-in-ticks", 10));
+        int stay = Math.max(0, getConfig().getInt("title-stay-ticks", 60));
+        int fadeOut = Math.max(0, getConfig().getInt("title-fade-out-ticks", 10));
+        player.sendTitle(ChatColor.translateAlternateColorCodes('&', title),
+                ChatColor.translateAlternateColorCodes('&', subtitle), fadeIn, stay, fadeOut);
     }
 
     boolean restoreRememberedSession(Player player) {

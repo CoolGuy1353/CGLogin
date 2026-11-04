@@ -1,0 +1,24 @@
+name: CGLogin
+version: 1.0.0
+main: com.coolguy1353.cglogin.CGLoginPlugin
+api-version: '1.20'
+author: CoolGuy1353
+description: Account login and registration for Minecraft servers.
+commands:
+  login:
+    description: Log in to your account.
+    usage: /login <password>
+  register:
+    description: Register an account.
+    usage: /register <password>
+  logout:
+    description: Log out of your account.
+    usage: /logout
+  resetpw:
+    description: Reset a player's password.
+    usage: /resetpw <player> <new-password>
+    permission: cglogin.admin
+permissions:
+  cglogin.admin:
+    description: Allows resetting player passwords.
+    default: op
